@@ -1,15 +1,6 @@
-# import sqlalchemy as sql
-# from sqlalchemy.orm import sessionmaker, declarative_base
-# import os
-# from dotenv import load_dotenv
-# load_dotenv()
-# db_path = 'sqlite:///' + os.getenv("DB_PATH")
-
-
 from flask_app.config import db, app
 
 
-# Base = declarative_base()
 class Categories(db.Model):
     __tablename__ = 'categories'
     category_id = db.Column(name='category_id', type_=db.Integer, primary_key=True)
@@ -30,7 +21,7 @@ class Subcategories(db.Model):
     subcategories_titel = db.Column(name='subcategory_title', type_=db.String)
     subcategories_url = db.Column(name='category_title', type_=db.String, nullable=True)
     
-    def __init__(self, subcategories_id,subcategories_categories, subcategories_titel, subcategories_url):
+    def __init__(self, subcategories_id, subcategories_categories, subcategories_titel, subcategories_url):
         self.subcategories_id = subcategories_id
         self.subcategories_categories = subcategories_categories
         self.subcategories_titel = subcategories_titel
@@ -74,6 +65,7 @@ class Users(db.Model):
         
     def __repr__(self):
         return f'{self._id}, {self.user_id}, {self.user_name}'
+
 
 with app.app_context():
     db.create_all()

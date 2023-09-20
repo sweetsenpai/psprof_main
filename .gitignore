@@ -5,4 +5,7 @@
 .iml
 .pyc
 .idea
-
+__pycache__
+.vscode
+flask_app/__pycache__/config.cpython-310.pyc
+DB/admin.db
