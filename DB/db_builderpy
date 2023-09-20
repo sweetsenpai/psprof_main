@@ -52,6 +52,27 @@ class Сhannels(Base):
         return f'{self.channel_id}, {self.subcategories_channel}, {self.channel_titel}, {self.channel_url}'
 
 
+class Users(Base):
+    """_summary_
+
+    table for collecting user data
+    """
+    __tablename__ = 'users'
+    _id = sql.Column(name='_id', type_=sql.Integer, primary_key=True)
+    user_id = sql.Column(name='user_id', type_=sql.Integer, index=True)
+    user_name = sql.Column(name='user_name', type_=sql.String)
+    
+    def __init__(self, _id, user_id, user_name):
+        self._id = _id
+        self.user_id = user_id
+        self.user_name = user_name
+        
+    def __repr__(self):
+        return f'{self._id}, {self.user_id}, {self.user_name}'
+        
+    
+
+
 engine = sql.create_engine(db_path + 'admin.db', echo=True)
 Base.metadata.create_all(bind=engine)
 Session = sessionmaker(bind=engine)
