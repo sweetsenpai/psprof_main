@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>{% block title %} Добро пожаловать в БД навигатор {% endblock %}</h1>
+    {% for post in posts %}
+        <a href="#">
+            <h2>{{ post['subcategories_titel'] }}</h2>
+        </a>
+        <hr>
+    {% endfor %}
+{% endblock %}

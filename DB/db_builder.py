@@ -19,7 +19,7 @@ class Subcategories(db.Model):
     __tablename__ = 'subcategories'
     subcategories_id = db.Column(name='subcategories_id', type_=db.Integer, primary_key=True)
     subcategories_categories = db.Column(db.Integer, db.ForeignKey('categories.category_id', ondelete="CASCADE"))
-    subcategories_titel = db.Column(name='subcategory_title', type_=db.String)
+    subcategories_titel = db.Column(name='subcategories_titel', type_=db.String)
     subcategories_url = db.Column(name='category_title', type_=db.String, default='')
     
     
