@@ -1,11 +1,23 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>{% block title %}  Добро пожаловать в БД навигатор {% endblock %}</h1>
+    <h1>{% block title %}  Каналы {% endblock %}</h1>
+    <table class="table table-striped">
+    <thead class="thead-dark">
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col">Подкатегория</th>
+        <th scope="col">Название</th>
+        <th scope="col">URL</th>
+    <tbody>
     {% for post in posts %}
-        <a href="#">
-            <h2>{{ post['channel_titel'] }}</h2>
-        </a>
-        <hr>
+        <tr>
+            <th scope="row"><h4>{{ post['channel_id'] }}</h4></th>
+            <td><h4>{{ post['subcategories_channel'] }}</h4></th>
+            <td><h4>{{ post['channel_titel'] }}</h4></th>
+            <td><h4>{{ post['channel_url'] }}</h4></th>
+        </tr>
     {% endfor %}
+    </tbody>
+    </table>
 {% endblock %}
