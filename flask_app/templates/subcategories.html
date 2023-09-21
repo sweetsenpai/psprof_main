@@ -1,11 +1,25 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>{% block title %} Добро пожаловать в БД навигатор {% endblock %}</h1>
+    <h1>{% block title %} Подкатегории {% endblock %}</h1>
+    <table class="table table-striped">
+    <thead class="thead-dark">
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Category</th>
+          <th scope="col">Name</th>
+          <th scope="col">URL</th>
+        </tr>
+    </thead>
+    <tbody>
     {% for post in posts %}
-        <a href="#">
-            <h2>{{ post['subcategories_titel'] }}</h2>
-        </a>
-        <hr>
-    {% endfor %}
+        <tr>
+            <th scope="row"><h4>{{ post['subcategories_id']}}</h4></th>
+            <td><h4>{{ post['subcategories_categories']}}</h4></td>
+            <td><h4>{{ post['subcategories_titel']}}</h4></td>
+            <td><h4>{{ post['subcategories_url']}}</h4></td>
+        </tr>
+    {% endfor %}    
+    </tbody>
+    </table>
 {% endblock %}
