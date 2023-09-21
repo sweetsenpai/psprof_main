@@ -4,7 +4,7 @@ from config import app, db
 from DB.db_builder import Users, Categories, Subcategories, Channels
 
 
-@app.route("/chanels")
+@app.route("/chanels")    
 def chanels_html():
     channels = db.session().query(Channels).all()
     return  render_template('chanels.html',posts=channels)
@@ -16,8 +16,14 @@ def subcategories_html():
     return  render_template('subcategories.html',posts=subcategories)
 
 
-@app.route("/categories")
+@app.route("/categories", methods=('GET', 'POST'))
 def categories_html():
+    if request.method == 'POST' and request.form["categori_name"]!='':
+        categori_name = request.form["categori_name"]
+        new_categori = Categories(categori_name)
+        db.session.add(new_categori)
+        db.session.commit()
+        return redirect(url_for('categories_html'))
     users = db.session().query(Categories).all()
     return  render_template('categories.html',posts=users)
 

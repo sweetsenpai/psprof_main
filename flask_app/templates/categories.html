@@ -10,10 +10,22 @@
         </tr>
     </thead>
     <tbody>
+    <tr>
+        <th scope="row"><h4>{{ '-'}}</h4></th>
+        <td>
+        <form method="post">
+            <div class="input-group mb-3">
+                <input type="text" name="categori_name" type="text" class="form-control" placeholder="Введи название новой категории" aria-label="Введи название новой категории" aria-describedby="basic-addon2">
+                <div class="input-group-append">
+                <button type="submit" class="btn btn-success">Отправить</button>
+
+        </form>
+        </td>
+    </tr>
     {% for post in posts %}
         <tr>
-            <th scope="row"><h4>{{ post['category_id']}}</h4></th>
-            <td><h4>{{ post['category_title'] }}</h4></td>
+        <th scope="row"><h4>{{ post['category_id']}}</h4></th>
+        <td><h4>{{ post['category_title'] }}</h4></td>
         </tr>
     {% endfor %}
     </tbody>
