@@ -2,7 +2,6 @@ import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
-from DB.db_builder import Categories, Subcategories, Channels, Users
 load_dotenv()
 db_path = 'sqlite:///' + os.getenv("DB_PATH")
 

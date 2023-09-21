@@ -1,4 +1,6 @@
-from sqlalchemy import Column, 
+from flask_app.config import db, app
+
+
 class Categories(db.Model):
     __tablename__ = 'categories'
     category_id = db.Column(name='category_id', type_=db.Integer, primary_key=True)
@@ -52,17 +54,17 @@ class Users(db.Model):
     table for collecting user data
     """
     __tablename__ = 'users'
-    _id = db.Column(name='_id', type_=db.Integer, primary_key=True)
+    _id = db.Column(name='_id', type_=db.Integer, primary_key=True,)
     user_id = db.Column(name='user_id', type_=db.Integer, index=True)
     user_name = db.Column(name='user_name', type_=db.String)
     
-    def __init__(self, _id, user_id, user_name):
-        self._id = _id
+    def __init__(self, user_id, user_name):
         self.user_id = user_id
         self.user_name = user_name
         
     def __repr__(self):
         return f'{self._id}, {self.user_id}, {self.user_name}'
+
 
 with app.app_context():
     db.create_all()
