@@ -2,11 +2,12 @@
 
 {% block content %}
     <h1>{% block title %}  Категории {% endblock %}</h1>
-    <table class="table table-striped">
+    <table class="table table-striped table-hover">
     <thead class="thead-dark">
         <tr>
         <th scope="col">#</th>
         <th scope="col">Название</th>
+        <th scope="col">Действие</th>
         </tr>
     </thead>
     <tbody>
@@ -15,18 +16,29 @@
         <td>
         <form method="post">
             <div class="input-group mb-3">
-                <input type="text" name="categori_name" type="text" class="form-control" placeholder="Введи название новой категории" aria-label="Введи название новой категории" aria-describedby="basic-addon2">
+                <input type="text" name="categori_name"  class="form-control" placeholder="Введи название новой категории" aria-label="Введи название новой категории" aria-describedby="basic-addon2">
                 <div class="input-group-append">
-                <button type="submit" class="btn btn-success">Отправить</button>
-
+                   <td> <button type="submit" class="btn btn-success" name="send_button" value='Create'>Отправить</button></td>
+                </div> 
+            </div>       
         </form>
         </td>
     </tr>
     {% for post in posts %}
-        <tr>
-        <th scope="row"><h4>{{ post['category_id']}}</h4></th>
-        <td><h4>{{ post['category_title'] }}</h4></td>
-        </tr>
+        <form>
+            <tr>
+                <th scope="row"><input style='width: 100%; border-box;border: none;background-color: transparent;color: black;' placeholder={{ post['category_id']}}></input>
+                </th>
+                <td><input style='width: 100%; border-box;border: none;background-color: transparent;color: black;'placeholder={{ post['category_title']}}></input></td>
+                <div class="input-group-append">
+                    <td>
+                    <button type="submit" class="btn btn-danger" name="send_button" value='Delete'>Удалить</button>
+                    <button type="submit" class="btn btn-warning" name="send_button" value='Change'>Изменить</button>
+                    <input type="hidden" value={{ post['category_id']}} name="user_id">
+                    </td>
+                </div> 
+            </tr>
+        </form>
     {% endfor %}
     </tbody>
 {% endblock %}
