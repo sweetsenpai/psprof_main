@@ -42,7 +42,7 @@ def categories_html():
             db.session.commit()
             return redirect(url_for('categories_html'))
         
-    users = db.session().query(Categories).all()
+    users = db.session().query(Categories).order_by(Categories.category_id).all()
     return  render_template('categories.html',posts=users)
 
 
