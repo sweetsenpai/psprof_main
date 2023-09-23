@@ -28,14 +28,18 @@ def categories_html():
             return redirect(url_for('categories_html'))
         
         elif request.form.get('delete_button'):
-            print(request.form['user_id'])
-            delete_id=request.form['user_id']
+            delete_id=request.form['delete_button']
             db.session.query(Categories).filter_by(category_id=delete_id).delete()
             db.session.commit()
             return redirect(url_for('categories_html'))
         
         elif request.form.get('change_button'):
-            
+            old_id = request.form["change_button"]
+            category_update = db.session.query(Categories).filter_by(category_id=old_id).one()
+            print('---------------------------------------------------------', category_update)
+            category_update.category_id = request.form["cat_id"]
+            category_update.category_title =request.form["cat_title"]
+            db.session.commit()
             return redirect(url_for('categories_html'))
         
     users = db.session().query(Categories).all()

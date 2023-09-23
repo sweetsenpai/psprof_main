@@ -26,21 +26,22 @@
     </tr>
     {% for post in posts %}
             <tr>
-                <th scope="row"><input style='width: 100%; border-box;border: none;background-color: transparent;color: black;' placeholder={{ post['category_id']}}></input>
-                </th>
+                <form method="post">
+                    <th scope="row">
+                        <input name='cat_id' value={{ post['category_id']}} style='width: 100%; border-box;border: none;background-color: transparent;color: black;' placeholder={{ post['category_id']}}></input>
+                    </th>
 
-                    <td>
-                        <form method="post">
-                        <div class="input-group-append">
-                            <input style='width: 100%; border-box;border: none;background-color: transparent;color: black;'placeholder={{ post['category_title']}}></input>
-                    </td>
-                    <td>
-                            <button type="submit" class="btn btn-danger" name="delete_button" value='Delete'>Удалить</button>
-                            <button type="submit" class="btn btn-warning" name="change_button" value='Change'>Изменить</button>
-                            <input type="hidden" value={{ post['category_id']}} name="user_id">
-                    </td>
-                </div> 
-            </form>
+                        <td>
+            
+                            <div class="input-group-append">
+                                <input name='cat_title' value={{ post['category_title']}} style='width: 100%; border-box;border: none;background-color: transparent;color: black;'placeholder={{ post['category_title']}}></input>
+                        </td>
+                        <td>
+                                <button type="submit" value={{ post['category_id']}} class="btn btn-danger" name="delete_button" value='Delete'>Удалить</button>
+                                <button type="submit" value={{ post['category_id']}} class="btn btn-warning" name="change_button" value='Change'>Изменить</button>
+                        </td>
+                    </div> 
+                </form>
             </tr>
         
     {% endfor %}
