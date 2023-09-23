@@ -25,20 +25,24 @@
         </td>
     </tr>
     {% for post in posts %}
-        <form>
             <tr>
                 <th scope="row"><input style='width: 100%; border-box;border: none;background-color: transparent;color: black;' placeholder={{ post['category_id']}}></input>
                 </th>
-                <td><input style='width: 100%; border-box;border: none;background-color: transparent;color: black;'placeholder={{ post['category_title']}}></input></td>
-                <div class="input-group-append">
+
                     <td>
-                    <button type="submit" class="btn btn-danger" name="send_button" value='Delete'>Удалить</button>
-                    <button type="submit" class="btn btn-warning" name="send_button" value='Change'>Изменить</button>
-                    <input type="hidden" value={{ post['category_id']}} name="user_id">
+                        <form method="post">
+                        <div class="input-group-append">
+                            <input style='width: 100%; border-box;border: none;background-color: transparent;color: black;'placeholder={{ post['category_title']}}></input>
+                    </td>
+                    <td>
+                            <button type="submit" class="btn btn-danger" name="delete_button" value='Delete'>Удалить</button>
+                            <button type="submit" class="btn btn-warning" name="change_button" value='Change'>Изменить</button>
+                            <input type="hidden" value={{ post['category_id']}} name="user_id">
                     </td>
                 </div> 
+            </form>
             </tr>
-        </form>
+        
     {% endfor %}
     </tbody>
 {% endblock %}

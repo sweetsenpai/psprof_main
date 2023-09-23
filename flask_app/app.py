@@ -19,19 +19,25 @@ def subcategories_html():
 @app.route("/categories", methods=('GET', 'POST'))
 def categories_html():
     if request.method == 'POST':
-        if request.form['send_button'] == "Create"and request.form["categori_name"]!='':
+        
+        if request.form.get('send_button') and (request.form["categori_name"]!='') :
             categori_name = request.form["categori_name"]
             new_categori = Categories(categori_name)
             db.session.add(new_categori)
             db.session.commit()
             return redirect(url_for('categories_html'))
-        if request.form['send_button'] == 'Delete':
-            print('--------------------------------------')
+        
+        elif request.form.get('delete_button'):
             print(request.form['user_id'])
             delete_id=request.form['user_id']
             db.session.query(Categories).filter_by(category_id=delete_id).delete()
             db.session.commit()
             return redirect(url_for('categories_html'))
+        
+        elif request.form.get('change_button'):
+            
+            return redirect(url_for('categories_html'))
+        
     users = db.session().query(Categories).all()
     return  render_template('categories.html',posts=users)
 
