@@ -34,7 +34,7 @@
                         <input name='sub_view' value={{ post['view_order']}} style='width: 100%; border-box;border: none;background-color: transparent;color: black;' placeholder={{ post['view_order']}}></input>
                     </th>
                             <div class="input-group-append">
-                                <td><input name='sub_title' value={{ post['subcategories_titel']}} style='width: 100%; border-box;border: none;background-color: transparent;color: black;'placeholder={{ post['subcategories_titel']}}></input></td>
+                                <td><input name='sub_title' value='{{ post.subcategories_titel}}' style='width: 100%; border-box;border: none;background-color: transparent;color: black;'placeholder='{{ post.subcategories_titel}}'></input></td>
                                 {% if post['subcategories_url']%}
                                     <td><input name='sub_url' style='width: 100%; border-box;border: none;background-color: transparent;color: black;'placeholder={{ post['subcategories_url']}} value={{ post['subcategories_url']}}></input></td>
                                 {% else %}

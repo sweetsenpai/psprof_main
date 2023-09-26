@@ -34,7 +34,7 @@
                         <input name='sub_view' aria-label={{ post['view_order']}} value={{ post['view_order']}} style='width: 100%; border-box;border: none;background-color: transparent;color: black;' placeholder={{ post['view_order']}}></input>
                     </th>
                             <div class="input-group-append">
-                                <td><input name='cha_title' aria-label={{ post['channel_titel']}} value={{ post['channel_titel']}} style='width: 100%; border-box;border: none;background-color: transparent;color: black;'placeholder={{ post['channel_titel']}}></input></td>
+                                <td><input name='cha_title' aria-label='{{post.channel_titel}}' class="form-control" placeholder='{{post.channel_titel}}' style='width: 100%; border-box;border: none;background-color: transparent;color: black;'></input></td>
                                 {% if post['channel_url']%}
                                     <td><input name='cha_url' aria-label={{ post['channel_url']}} style='width: 100%; border-box;border: none;background-color: transparent;color: black;'placeholder={{ post['channel_url']}} value={{ post['channel_url']}}></input></td>
                                 {% else %}

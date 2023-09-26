@@ -103,6 +103,15 @@ def index():
     users = db.session().query(Users).all()
     return render_template('users.html', posts=users)
 
+@app.route('/login')
+def login():
+    return render_template('login.html')
+
+@app.route('/login', methods=['POST'])
+def login_post():
+    # login code goes here
+    return redirect(url_for('main.profile'))
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', debug=True)
+    
