@@ -42,7 +42,7 @@
                                 {% endif %}
                                 </div>
                         <td>
-                                <button type="button" onclick="location.href='';" class="btn btn-primary">Каналы</button>
+                                <button type="button" onclick="location.href='{{ post['subcategories_id']}}/chaedit';" class="btn btn-primary">Каналы</button>
                                 <button type="submit" value={{ post['subcategories_id']}} class="btn btn-warning" name="change_button" value='Change'>Изменить</button> 
                                 <button type="submit" value={{ post['subcategories_id']}} class="btn btn-danger" name="delete_button" value='Delete'>Удалить</button>
                         </td>

@@ -27,7 +27,8 @@ def categories_html():
         
         elif request.form.get('delete_button'):
             delete_id = request.form['delete_button']
-            db.session.query(Categories).filter_by(category_id=delete_id).delete()
+            del_member = db.session.query(Categories).filter_by(category_id=delete_id).one()
+            db.session.delete(del_member)
             db.session.commit()
         
         elif request.form.get('change_button'):
@@ -52,7 +53,8 @@ def subedit(category_id):
             db.session.commit()
         if request.form.get('delete_button'):
             delete_id = request.form['delete_button']
-            db.session.query(Subcategories).filter_by(subcategories_id= delete_id).delete()
+            del_member = db.session.query(Subcategories).filter_by(subcategories_id=delete_id).delete()
+            db.session.delete(del_member)
             db.session.commit()
         if request.form.get('change_button'):
             update_id = request.form["change_button"]
@@ -66,8 +68,35 @@ def subedit(category_id):
             db.session.commit()
         return redirect(f'/{category_id}/subedit')
     subc = db.session.query(Subcategories).where(Subcategories.subcategories_categories == category_id).order_by(Subcategories.view_order).all()
-    return render_template(f'subedit.html', posts=subc)
+    return render_template('subedit.html', posts=subc)
+
+
+@app.route('/<int:category_id>/<int:subcategories_id>/chaedit', methods=('GET', 'POST'))
+def chaedit(subcategories_id, category_id):
+    if request.method == 'POST':
+        if request.form.get('send_button'):
+            new_cha = Channels(subcategories_id,request.form['channel_titel'], request.form['channel_url'])
+            db.session.add(new_cha)
+            db.session.commit()
         
+        if request.form.get('delete_button'):
+            delete_id = request.form['delete_button']
+            del_member = db.session.query(Channels).where(Channels.channel_id==delete_id).one_or_none()
+            db.session.delete(del_member)
+            db.session.commit()
+            
+        if request.form.get('change_button'):
+            update_id = request.form["change_button"]
+            cha_title = request.form["cha_titel"]
+            cha_url = request.form["cha_url"]
+            update_obj = db.session.query(Channels).where(Channels.channel_id == update_id).one_or_none()
+            update_obj.channel_titel = cha_title
+            update_obj.channel_url = cha_url
+            db.session.commit()
+        return redirect(f'/{subcategories_id}/{category_id}/chaedit')   
+    
+    chanels = db.session.query(Channels).where(Channels.subcategories_channel == subcategories_id).order_by(Channels.view_order).all()
+    return render_template('chaedit.html', posts=chanels)
 
 @app.route("/users")
 def index():
