@@ -7,7 +7,7 @@ class Categories(db.Model):
     __tablename__ = 'categories'
     category_id = db.Column(name='category_id', type_=db.Integer, primary_key=True)
     category_title = db.Column(name='category_title', type_=db.String)
-    subcategories = relationship('Subcategories', backref='categories', cascade='save-update, merge, delete')
+    subcategories = relationship('Subcategories', backref='categories', cascade='save-update, merge, delete, delete-orphan')
 
     def __init__(self, category_title):
         self.category_title = category_title
@@ -22,7 +22,7 @@ class Subcategories(db.Model):
     subcategories_categories = db.Column(db.Integer, db.ForeignKey('categories.category_id'))
     subcategories_titel = db.Column(name='subcategories_titel', type_=db.String)
     subcategories_url = db.Column(name='subcategories_url', type_=db.String, default='')
-    channels = relationship('Channels', backref='subcategories', cascade='save-update, merge, delete')
+    channels = relationship('Channels', backref='subcategories', cascade='save-update, merge, delete, delete-orphan')
 
     def __init__(self, subcategories_categories, subcategories_titel, subcategories_url):
         self.subcategories_categories = subcategories_categories
