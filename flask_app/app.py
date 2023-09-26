@@ -43,7 +43,7 @@ def categories_html():
             return redirect(url_for('categories_html'))
         
     users = db.session().query(Categories).order_by(Categories.category_id).all()
-    return  render_template('categories.html',posts=users)
+    return render_template('categories.html',posts=users)
 
 
 @app.route("/users")

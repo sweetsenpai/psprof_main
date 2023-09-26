@@ -1,13 +1,15 @@
 from flask_app.config import db, app
-from sqlalchemy.orm import sessionmaker, relationship
+from sqlalchemy.orm import relationship
+from sqlalchemy import Identity
 
 
 class Categories(db.Model):
     
     __tablename__ = 'categories'
-    category_id = db.Column(name='category_id', type_=db.Integer, primary_key=True)
+    category_id = db.Column(name='category_id', type_=db.Integer, primary_key=True, onupdate="cascade")
     category_title = db.Column(name='category_title', type_=db.String)
-    subcategories = relationship('Subcategories', backref='categories', cascade='save-update, merge, delete, delete-orphan')
+    sub = relationship('Subcategories', backref='categories', cascade="all, delete-orphan, save-update, merge")
+    view = db.Column(autoincrement=True,name='view', type_=db.Integer)
 
     def __init__(self, category_title):
         self.category_title = category_title
@@ -17,13 +19,12 @@ class Categories(db.Model):
 
 
 class Subcategories(db.Model):
-    __tablename__ = 'subcategories'
+    __tablename__  = 'subcategories'
     subcategories_id = db.Column(name='subcategories_id', type_=db.Integer, primary_key=True)
     subcategories_categories = db.Column(db.Integer, db.ForeignKey('categories.category_id'))
     subcategories_titel = db.Column(name='subcategories_titel', type_=db.String)
     subcategories_url = db.Column(name='subcategories_url', type_=db.String, default='')
-    channels = relationship('Channels', backref='subcategories', cascade='save-update, merge, delete, delete-orphan')
-
+    
     def __init__(self, subcategories_categories, subcategories_titel, subcategories_url):
         self.subcategories_categories = subcategories_categories
         self.subcategories_titel = subcategories_titel
@@ -34,18 +35,18 @@ class Subcategories(db.Model):
 
 
 class Channels(db.Model):
-    __tablename__ = 'channels'
+    __tablename__  = 'channels'
     channel_id = db.Column(name='channel_id', type_=db.Integer, primary_key=True)
-    subcategories_channel = db.Column(db.Integer, db.ForeignKey('subcategories.subcategories_id'))
+    subcategories_channel = db.Column(db.Integer, db.ForeignKey('subcategories.subcategories_id', ondelete="CASCADE"))
     channel_titel = db.Column(name='channel_titel', type_=db.String)
     channel_url = db.Column(name='channel_url', type_=db.String)
-    
+
     def __init__(self, subcategories_channel, channel_titel, channel_url):
         self.subcategories_channel = subcategories_channel
         self.channel_titel = channel_titel
         self.channel_url = channel_url
         self.display_order = self.channel_id
-    
+
     def __repr__(self):
         return f'{self.channel_id}, {self.subcategories_channel}, {self.channel_titel}, {self.channel_url}'
 
@@ -55,19 +56,27 @@ class Users(db.Model):
 
     table for collecting user data
     """
-    __tablename__ = 'users'
+    __tablename__  = 'users'
     _id = db.Column(name='_id', type_=db.Integer, primary_key=True,)
     user_id = db.Column(name='user_id', type_=db.Integer, index=True)
     user_name = db.Column(name='user_name', type_=db.String)
-
+    
     def __init__(self, user_id, user_name):
         self.user_id = user_id
         self.user_name = user_name
-
+        
     def __repr__(self):
         return f'{self._id}, {self.user_id}, {self.user_name}'
 
 
-if __name__ == "__main__":
+if __name__ == "main":
     with app.app_context():
         db.create_all()
+        cat = Categories('Котик')
+        dog = Categories('Dog')
+        db.session.add(cat)
+        db.session.commit()
+        db.session.add(dog)
+        db.session.commit()
+
+    print('END')
