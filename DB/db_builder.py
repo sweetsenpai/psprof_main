@@ -24,18 +24,19 @@ class Subcategories(db.Model):
     subcategories_id = db.Column(name='subcategories_id', type_=db.Integer, primary_key=True)
     subcategories_categories = db.Column(db.Integer, db.ForeignKey('categories.category_id'))
     subcategories_titel = db.Column(name='subcategories_titel', type_=db.String)
-    subcategories_url = db.Column(name='subcategories_url', type_=db.String, default='')
+    subcategories_url = db.Column(name='subcategories_url', type_=db.String, default=None)
     view_order = db.Column(name='view_order', type_=db.Integer, autoincrement=True)
     ch = relationship('Channels', backref='subcategories', cascade="all, delete-orphan, save-update, merge")
 
-    def __init__(self, subcategories_categories, subcategories_titel):
+    def __init__(self, subcategories_categories, subcategories_titel, subcategories_url):
         self.subcategories_categories = subcategories_categories
         self.subcategories_titel = subcategories_titel
+        self.subcategories_url = subcategories_url
         with app.app_context():
             self.view_order = db.session().query(Subcategories).where(Subcategories.subcategories_categories == subcategories_categories).count() + 1
 
     def __repr__(self):
-        return f'{self.subcategories_id}, {self.subcategories_categories}, {self.subcategories_titel}, {self.subcategories_url}, {self.display_order}'
+        return f'{self.subcategories_id}, {self.subcategories_categories}, {self.subcategories_titel}, {self.subcategories_url}, {self.view_order}'
 
 
 class Channels(db.Model):

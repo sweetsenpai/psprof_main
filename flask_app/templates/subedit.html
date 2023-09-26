@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>{% block title %}  Подкатегории {% endblock %}</h1>
+    <table class="table table-striped table-hover">
+    <thead class="thead-dark">
+        <tr>
+        <th scope="col">#</th>
+        <th scope="col">Название</th>
+        <th scope="col">Ссылка</th>
+        <th scope="col">Действие</th>
+        </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <th scope="row"><h4>{{ '-'}}</h4></th>
+        <form method="post">
+
+                <div class="input-group mb-3">
+                    <td><input type="text" name="subcategories_titel"  class="form-control" placeholder="Введи название подкатегории" aria-label="Введи название подкатегории" aria-describedby="basic-addon2"></td> 
+                    <td><input type="text" name="subcategories_url"  class="form-control" placeholder="Введи ссылку (опционально)" aria-label="Введи ссылку (опционально)" aria-describedby="basic-addon2"></td> 
+                </div> 
+
+                <div class="input-group-append">
+                    <td> <button type="submit" class="btn btn-success" name="send_button" value='Create'>Отправить</button></td>
+                </div>     
+        </form>
+        
+    </tr>
+    {% for post in posts %}
+            <tr>
+                <form method="post">
+                    <th scope="row">
+                        <input name='sub_view' value={{ post['view_order']}} style='width: 100%; border-box;border: none;background-color: transparent;color: black;' placeholder={{ post['view_order']}}></input>
+                    </th>
+                            <div class="input-group-append">
+                                <td><input name='sub_title' value={{ post['subcategories_titel']}} style='width: 100%; border-box;border: none;background-color: transparent;color: black;'placeholder={{ post['subcategories_titel']}}></input></td>
+                                {% if post['subcategories_url']%}
+                                    <td><input name='sub_url' style='width: 100%; border-box;border: none;background-color: transparent;color: black;'placeholder={{ post['subcategories_url']}} value={{ post['subcategories_url']}}></input></td>
+                                {% else %}
+                                <td><input name='sub_url' style='width: 100%; border-box;border: none;background-color: transparent;color: black;'></input></td>
+                                {% endif %}
+                                </div>
+                        <td>
+                                <button type="button" onclick="location.href='';" class="btn btn-primary">Каналы</button>
+                                <button type="submit" value={{ post['subcategories_id']}} class="btn btn-warning" name="change_button" value='Change'>Изменить</button> 
+                                <button type="submit" value={{ post['subcategories_id']}} class="btn btn-danger" name="delete_button" value='Delete'>Удалить</button>
+                        </td>
+                    </div> 
+                </form>
+            </tr> 
+    {% endfor %}
+    </tbody>
+{% endblock %}

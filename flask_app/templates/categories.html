@@ -17,9 +17,9 @@
         <form method="post">
             <div class="input-group mb-3">
                 <input type="text" name="categori_name"  class="form-control" placeholder="Введи название новой категории" aria-label="Введи название новой категории" aria-describedby="basic-addon2">
+                </div>
                 <div class="input-group-append">
-                   <td> <button type="submit" class="btn btn-success" name="send_button" value='Create'>Отправить</button></td>
-                </div> 
+                <td> <button type="submit" class="btn btn-success" name="send_button" value='Create'>Отправить</button></td>
             </div>       
         </form>
         </td>
@@ -28,17 +28,19 @@
             <tr>
                 <form method="post">
                     <th scope="row">
-                        <input name='cat_id' value={{ post['category_id']}} style='width: 100%; border-box;border: none;background-color: transparent;color: black;' placeholder={{ post['category_id']}}></input>
+                        <input name='cat_view' value={{ post['view_order']}} style='width: 100%; border-box;border: none;background-color: transparent;color: black;' placeholder={{ post['view_order']}}></input>
                     </th>
 
                         <td>
             
                             <div class="input-group-append">
                                 <input name='cat_title' value={{ post['category_title']}} style='width: 100%; border-box;border: none;background-color: transparent;color: black;'placeholder={{ post['category_title']}}></input>
+                            </div>
                         </td>
                         <td>
-                                <button type="submit" value={{ post['category_id']}} class="btn btn-danger" name="delete_button" value='Delete'>Удалить</button>
+                                <button type="button" onclick="location.href='{{ post['category_id']}}/subedit';" class="btn btn-primary">Подкласс</button>
                                 <button type="submit" value={{ post['category_id']}} class="btn btn-warning" name="change_button" value='Change'>Изменить</button>
+                                <button type="submit" value={{ post['category_id']}} class="btn btn-danger" name="delete_button" value='Delete'>Удалить</button>
                         </td>
                     </div> 
                 </form>
