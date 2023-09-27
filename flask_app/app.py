@@ -1,24 +1,28 @@
 from flask import Flask, render_template,  request, url_for, flash, redirect
-from flask_login import login_user
-from config import app, db
+from flask_login import login_required, login_user, current_user, logout_user
+from sqlalchemy import and_
+from config import app, db, login_manager
 from DB.db_builder import Users, Categories, Subcategories, Channels
-import os
+import datetime
 from dotenv import load_dotenv
 load_dotenv()
 
-@app.route("/chanels")    
+@app.route("/chanels")
+@login_required    
 def chanels_html():
     channels = db.session().query(Channels).all()
     return render_template('chanels.html',posts=channels)
 
 
 @app.route("/subcategories")
+@login_required  
 def subcategories_html():
     subcategories = db.session().query(Subcategories).all()
-    return  render_template('subcategories.html',posts=subcategories)
+    return  render_template('subcategories.html',posts=subcategories, name=current_user.user_id)
 
 
 @app.route("/categories", methods=('GET', 'POST'))
+@login_required  
 def categories_html():
     if request.method == 'POST':
         
@@ -44,10 +48,11 @@ def categories_html():
         return redirect(url_for('categories_html'))
         
     users = db.session().query(Categories).order_by(Categories.view_order).all()
-    return render_template('categories.html', posts=users)
+    return render_template('categories.html', posts=users, name=current_user.user_id)
 
 
 @app.route('/<int:category_id>/subedit', methods=('GET', 'POST'))
+@login_required  
 def subedit(category_id):
     if request.method == 'POST':
         if request.form.get('send_button'):
@@ -71,10 +76,11 @@ def subedit(category_id):
             db.session.commit()
         return redirect(f'/{category_id}/subedit')
     subc = db.session.query(Subcategories).where(Subcategories.subcategories_categories == category_id).order_by(Subcategories.view_order).all()
-    return render_template('subedit.html', posts=subc)
+    return render_template('subedit.html', posts=subc, name=current_user.user_id)
 
 
 @app.route('/<int:category_id>/<int:subcategories_id>/chaedit', methods=('GET', 'POST'))
+@login_required  
 def chaedit(subcategories_id, category_id):
     if request.method == 'POST':
         if request.form.get('send_button'):
@@ -99,26 +105,49 @@ def chaedit(subcategories_id, category_id):
         return redirect(f'/{subcategories_id}/{category_id}/chaedit')   
     
     chanels = db.session.query(Channels).where(Channels.subcategories_channel == subcategories_id).order_by(Channels.view_order).all()
-    return render_template('chaedit.html', posts=chanels)
+    return render_template('chaedit.html', posts=chanels, name=current_user.user_id)
 
 @app.route("/users")
-def index():
+@login_required  
+def users():
     users = db.session().query(Users).all()
-    return render_template('users.html', posts=users)
+    return render_template('users.html', posts=users, name=current_user.user_id)
+
+@login_manager.user_loader
+def load_user(user_id):
+    return db.session.query(Users).get(int(user_id))
+
+
+@login_manager.unauthorized_handler 
+def unauthorized_callback():
+    if not current_user.is_authenticated:
+        return redirect(url_for('login'))
 
 
 @app.route('/login', methods=('GET', 'POST'))
-def login_post():
+def login():
     if request.method == 'POST':
         username = request.form['login']
         password = request.form['password']
-        print('-------------------------------------')
-        if username!=os.getenv("USERNAME") or password!=os.getenv("PASSWORD"):
-            flash('Please check your login details and try again.')
-            
-        return redirect(url_for('index'))
+        user = db.session.query(Users).where(and_(Users.user_name == username, Users.password == password)).one_or_none()
+        if not user:
+            flash('Please check your login details and try again.', category='error')
+            return redirect(url_for('login'))
         
+        login_user(user, remember=False, duration=datetime.timedelta(seconds=10))
+        flash('Logged in successfully.')
+        print('---------------------------------------------')
+        return redirect(url_for('categories_html'))
     return render_template('login.html')
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('login'))
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', debug=True)

@@ -1,6 +1,7 @@
-from flask_app.config import db, app
+from flask_app.config import db, app, login_manager
 from sqlalchemy.orm import relationship
 from sqlalchemy import Column, ForeignKey
+from flask_login import UserMixin
 
 class Categories(db.Model):
 
@@ -58,7 +59,7 @@ class Channels(db.Model):
         return f'{self.channel_id}, {self.subcategories_channel}, {self.channel_titel}, {self.channel_url}'
 
 
-class Users(db.Model):
+class Users(UserMixin, db.Model):
     """_summary_
 
     table for collecting user data
@@ -67,6 +68,7 @@ class Users(db.Model):
     _id = Column(name='_id', type_=db.Integer, primary_key=True,)
     user_id = Column(name='user_id', type_=db.Integer, index=True)
     user_name = Column(name='user_name', type_=db.String)
+    password = Column(name='password', type_=db.String)
 
     def __init__(self, user_id, user_name):
         self.user_id = user_id
@@ -75,6 +77,8 @@ class Users(db.Model):
     def __repr__(self):
         return f'{self._id}, {self.user_id}, {self.user_name}'
 
+    def get_id(self):
+        return str(self.user_id)
 
 if __name__ == '__main__':
     with app.app_context():
