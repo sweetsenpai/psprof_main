@@ -90,7 +90,7 @@ def chaedit(subcategories_id, category_id):
         
         if request.form.get('delete_button'):
             delete_id = request.form['delete_button']
-            del_member = db.session.query(Channels).where(Channels.channel_id==delete_id).one_or_none()
+            del_member = db.session.query(Channels).where(Channels.channel_id == delete_id).one_or_none()
             db.session.delete(del_member)
             db.session.commit()
             
@@ -107,11 +107,13 @@ def chaedit(subcategories_id, category_id):
     chanels = db.session.query(Channels).where(Channels.subcategories_channel == subcategories_id).order_by(Channels.view_order).all()
     return render_template('chaedit.html', posts=chanels, name=current_user.user_id)
 
+
 @app.route("/users")
 @login_required  
 def users():
     users = db.session().query(Users).all()
     return render_template('users.html', posts=users, name=current_user.user_id)
+
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -139,10 +141,13 @@ def login():
         print('---------------------------------------------')
         return redirect(url_for('categories_html'))
     return render_template('login.html')
+
+
 @app.route('/logout')
 def logout():
     logout_user()
     return redirect(url_for('login'))
+
 
 @app.route('/')
 def index():

@@ -3,6 +3,7 @@ from sqlalchemy.orm import relationship
 from sqlalchemy import Column, ForeignKey
 from flask_login import UserMixin
 
+
 class Categories(db.Model):
 
     __tablename__ = 'categories'
@@ -10,6 +11,7 @@ class Categories(db.Model):
     category_title = Column(name='category_title', type_=db.String)
     view_order = Column(name='view_order', type_=db.Integer)
     subcategories = relationship('Subcategories', backref='categories', cascade="all, delete-orphan, save-update, merge")
+
     def __init__(self, category_title):
         self.category_title = category_title
         with app.app_context():
@@ -79,6 +81,7 @@ class Users(UserMixin, db.Model):
 
     def get_id(self):
         return str(self.user_id)
+
 
 if __name__ == '__main__':
     with app.app_context():
