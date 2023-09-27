@@ -1,7 +1,10 @@
 from flask import Flask, render_template,  request, url_for, flash, redirect
+from flask_login import login_user
 from config import app, db
 from DB.db_builder import Users, Categories, Subcategories, Channels
-
+import os
+from dotenv import load_dotenv
+load_dotenv()
 
 @app.route("/chanels")    
 def chanels_html():
@@ -103,14 +106,19 @@ def index():
     users = db.session().query(Users).all()
     return render_template('users.html', posts=users)
 
-@app.route('/login')
-def login():
-    return render_template('login.html')
 
-@app.route('/login', methods=['POST'])
+@app.route('/login', methods=('GET', 'POST'))
 def login_post():
-    # login code goes here
-    return redirect(url_for('main.profile'))
+    if request.method == 'POST':
+        username = request.form['login']
+        password = request.form['password']
+        print('-------------------------------------')
+        if username!=os.getenv("USERNAME") or password!=os.getenv("PASSWORD"):
+            flash('Please check your login details and try again.')
+            
+        return redirect(url_for('index'))
+        
+    return render_template('login.html')
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', debug=True)
