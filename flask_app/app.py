@@ -7,6 +7,7 @@ import datetime
 from dotenv import load_dotenv
 load_dotenv()
 
+
 @app.route("/chanels")
 @login_required    
 def chanels_html():
@@ -18,7 +19,7 @@ def chanels_html():
 @login_required  
 def subcategories_html():
     subcategories = db.session().query(Subcategories).all()
-    return  render_template('subcategories.html',posts=subcategories, name=current_user.user_id)
+    return render_template('subcategories.html', posts=subcategories, name=current_user.user_id)
 
 
 @app.route("/categories", methods=('GET', 'POST'))
@@ -28,7 +29,8 @@ def categories_html():
         
         if request.form.get('send_button') and (request.form["categori_name"] != ''):
             categori_name = request.form["categori_name"]
-            new_categori = Categories(categori_name)
+            category_url = request.form["categori_url"]
+            new_categori = Categories(categori_name, category_url)
             db.session.add(new_categori)
             db.session.commit()
         
@@ -56,19 +58,19 @@ def categories_html():
 def subedit(category_id):
     if request.method == 'POST':
         if request.form.get('send_button'):
-            new_sub = Subcategories(category_id,request.form['subcategories_titel'], request.form['subcategories_url'])
+            new_sub = Subcategories(category_id, request.form['subcategories_titel'], request.form['subcategories_url'])
             db.session.add(new_sub)
             db.session.commit()
         if request.form.get('delete_button'):
             delete_id = request.form['delete_button']
-            del_member = db.session.query(Subcategories).filter_by(subcategories_id=delete_id).delete()
+            del_member = db.session.query(Subcategories).filter_by(subcategories_id=delete_id).one()
             db.session.delete(del_member)
             db.session.commit()
         if request.form.get('change_button'):
             update_id = request.form["change_button"]
             sub_title = request.form["sub_title"]
             sub_url = request.form["sub_url"]
-            sub_veiw =  request.form["sub_view"]
+            sub_veiw = request.form["sub_view"]
             update_obj = db.session.query(Subcategories).where(Subcategories.subcategories_id==update_id).one_or_none()
             update_obj.subcategories_titel = sub_title
             update_obj.subcategories_url = sub_url
@@ -102,7 +104,7 @@ def chaedit(subcategories_id, category_id):
             update_obj.channel_titel = cha_title
             update_obj.channel_url = cha_url
             db.session.commit()
-        return redirect(f'/{subcategories_id}/{category_id}/chaedit')   
+        return redirect(f'/{category_id}/{subcategories_id}/chaedit')
     
     chanels = db.session.query(Channels).where(Channels.subcategories_channel == subcategories_id).order_by(Channels.view_order).all()
     return render_template('chaedit.html', posts=chanels, name=current_user.user_id)
@@ -111,8 +113,8 @@ def chaedit(subcategories_id, category_id):
 @app.route("/users")
 @login_required  
 def users():
-    users = db.session().query(Users).all()
-    return render_template('users.html', posts=users, name=current_user.user_id)
+    users_list = db.session().query(Users).all()
+    return render_template('users.html', posts=users_list)
 
 
 @login_manager.user_loader
@@ -136,7 +138,7 @@ def login():
             flash('Please check your login details and try again.', category='error')
             return redirect(url_for('login'))
         
-        login_user(user, remember=False, duration=datetime.timedelta(seconds=10))
+        login_user(user, remember=True)
         flash('Logged in successfully.')
         print('---------------------------------------------')
         return redirect(url_for('categories_html'))
@@ -150,6 +152,7 @@ def logout():
 
 
 @app.route('/')
+@login_required
 def index():
     return render_template('index.html')
 

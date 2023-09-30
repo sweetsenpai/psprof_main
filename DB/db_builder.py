@@ -1,4 +1,4 @@
-from flask_app.config import db, app, login_manager
+from flask_app.config import db, app
 from sqlalchemy.orm import relationship
 from sqlalchemy import Column, ForeignKey
 from flask_login import UserMixin
@@ -10,15 +10,17 @@ class Categories(db.Model):
     category_id = Column(name='category_id', type_=db.Integer, primary_key=True, autoincrement=True)
     category_title = Column(name='category_title', type_=db.String)
     view_order = Column(name='view_order', type_=db.Integer)
+    category_url = Column(name='category_url', type_=db.String)
     subcategories = relationship('Subcategories', backref='categories', cascade="all, delete-orphan, save-update, merge")
 
-    def __init__(self, category_title):
+    def __init__(self, category_title, category_url):
         self.category_title = category_title
+        self.category_url = category_url
         with app.app_context():
             self.view_order = db.session().query(Categories).count() + 1
 
     def __repr__(self):
-        return f'{self.category_id}, {self.category_title}, {self.view_order}'
+        return f'{self.category_id}, {self.category_title}, {self.category_url},{self.view_order}'
 
 
 class Subcategories(db.Model):

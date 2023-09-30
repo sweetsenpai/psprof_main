@@ -2,8 +2,8 @@
 
 {% block content %}
     <h1>{% block title %}  Пользователи {% endblock %}</h1>
-    <table class="table table-striped">
-    <thead class="thead-dark">
+    <table class="table table-striped table-hover">
+    <thead class="thead-dark">>
         <tr>
             <th scope="col">#</th>
             <th scope="col">user_id</th>
@@ -11,6 +11,7 @@
           </tr>
     </thead>
     <tbody>
+    <tr>
     {% for post in posts %}
         <tr>
             <th scope="row"><h4>{{ post['_id'] }}</h4></th>

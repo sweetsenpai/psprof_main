@@ -1,6 +1,6 @@
 from telegram.ext import ContextTypes
 from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton, ReplyKeyboardMarkup
-from DB.db_builder import Categories, Subcategories, Channels, db
+from DB.db_builder import Categories, Subcategories, Channels, db, Users
 from flask_app.config import app
 
 
@@ -9,11 +9,28 @@ async def main_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
         categories = db.session.query(Categories).order_by(Categories.view_order).all()
     main_list = []
     for cat in categories:
-        main_list.append([InlineKeyboardButton(text=cat.category_title, callback_data=f"M:{cat.category_id}")])
+        if cat.category_url is None or cat.category_url == '':
+            main_list.append([InlineKeyboardButton(text=cat.category_title, callback_data=f"M:{cat.category_id}")])
+        else:
+            main_list.append([InlineKeyboardButton(text=cat.category_title, url=cat.category_url)])
     try:
-        await update.message.reply_text(text='Выбери категорию', reply_markup=InlineKeyboardMarkup(main_list))
+        await update.message.reply_text(text='Выберите категорию', reply_markup=InlineKeyboardMarkup(main_list))
+        user_name = update.message.from_user.name
+        user_id = update.message.from_user.id
+        with app.app_context():
+            if not db.session.query(Users).where(Users.user_id == user_id).one_or_none():
+                user = Users(user_id, user_name)
+                db.session.add(user)
+                db.session.commit()
     except AttributeError:
-        await update.callback_query.edit_message_text(text='Выбери категорию', reply_markup=InlineKeyboardMarkup(main_list))
+        await update.callback_query.edit_message_text(text='Выберите категорию', reply_markup=InlineKeyboardMarkup(main_list))
+        user_name = update.callback_query.from_user.name
+        user_id = update.callback_query.from_user.id
+        with app.app_context():
+            if not db.session.query(Users).where(Users.user_id == user_id).one_or_none():
+                user = Users(user_id, user_name)
+                db.session.add(user)
+                db.session.commit()
     return
 
 
@@ -45,7 +62,7 @@ async def channels_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
     for chanel in channels:
         channel_list.append([InlineKeyboardButton(text=chanel.channel_titel, url=chanel.channel_url)])
     channel_list.append([InlineKeyboardButton(text='⬅️Назад', callback_data=f'BACK:{sub_id}'), InlineKeyboardButton(text='На главную 🏠', callback_data='MAIN')])
-    await update.callback_query.edit_message_text(text='Выбери категорию', reply_markup=InlineKeyboardMarkup(channel_list))
+    await update.callback_query.edit_message_text(text='Выберите категорию', reply_markup=InlineKeyboardMarkup(channel_list))
     return
 
 
@@ -55,5 +72,5 @@ async def back(update: Update, context: ContextTypes.DEFAULT_TYPE):
         sub_id = db.session.query(Subcategories).where(Subcategories.subcategories_id == back_id).one_or_none()
         cat_id = sub_id.subcategories_categories
         subcategories = db.session.query(Subcategories).where(Subcategories.subcategories_categories == cat_id).order_by(Subcategories.view_order).all()
-    await update.callback_query.edit_message_text(text='Выбери категорию', reply_markup=InlineKeyboardMarkup(sub_builder(subcategories)))
+    await update.callback_query.edit_message_text(text='Выберите категорию', reply_markup=InlineKeyboardMarkup(sub_builder(subcategories)))
     return
