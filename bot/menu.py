@@ -14,6 +14,8 @@ async def main_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
         else:
             main_list.append([InlineKeyboardButton(text=cat.category_title, url=cat.category_url)])
     try:
+        if update.message.chat.type != 'private':
+            return
         await update.message.reply_text(text='Выберите категорию', reply_markup=InlineKeyboardMarkup(main_list))
         user_name = update.message.from_user.name
         user_id = update.message.from_user.id
@@ -23,6 +25,8 @@ async def main_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 db.session.add(user)
                 db.session.commit()
     except AttributeError:
+        if update.callback_query.message.chat.type != 'private':
+            return
         await update.callback_query.edit_message_text(text='Выберите категорию', reply_markup=InlineKeyboardMarkup(main_list))
         user_name = update.callback_query.from_user.name
         user_id = update.callback_query.from_user.id
@@ -50,7 +54,7 @@ async def sub_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
     cat_id = int(update.callback_query.data.replace('M:', ''))
     with app.app_context():
         subcategories = db.session.query(Subcategories).where(Subcategories.subcategories_categories == cat_id).order_by(Subcategories.view_order).all()
-    await update.callback_query.edit_message_text(text='Выбери категорию', reply_markup=InlineKeyboardMarkup(sub_builder(subcategories)))
+    await update.callback_query.edit_message_text(text='Выберите категорию', reply_markup=InlineKeyboardMarkup(sub_builder(subcategories)))
     return
 
 
